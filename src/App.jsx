@@ -3,18 +3,32 @@ import { initialPlaylist, getYoutubeEmbedUrl, extractYoutubeId } from './playlis
 
 const STORAGE_KEY = 'birthday-playlist';
 
-function App() {
-  const [playlist, setPlaylist] = useState(() => {
+function getSavedPlaylist() {
+  try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : initialPlaylist;
-  });
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch (e) {
+    console.warn('Failed to load playlist from localStorage');
+  }
+  return initialPlaylist;
+}
+
+function App() {
+  const [playlist, setPlaylist] = useState(getSavedPlaylist);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newSong, setNewSong] = useState({ title: '', artist: '', youtubeUrl: '' });
+  const [newSong, setNewSong] = useState({ title: '', artist: '', youtubeUrl: '', lyrics: '' });
   const [error, setError] = useState('');
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(playlist));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(playlist));
+    } catch (e) {
+      console.warn('Failed to save playlist');
+    }
   }, [playlist]);
 
   const currentSong = playlist[currentIndex];
@@ -52,11 +66,12 @@ function App() {
       artist: newSong.artist.trim(),
       youtubeUrl: newSong.youtubeUrl,
       youtubeId,
+      lyrics: newSong.lyrics?.trim() || null,
     };
 
     setPlaylist((prev) => [...prev, song]);
     setCurrentIndex(playlist.length);
-    setNewSong({ title: '', artist: '', youtubeUrl: '' });
+    setNewSong({ title: '', artist: '', youtubeUrl: '', lyrics: '' });
     setShowAddForm(false);
   };
 
@@ -126,6 +141,16 @@ function App() {
               </svg>
             </button>
           </div>
+
+          {currentSong.lyrics && (
+            <div className="mt-6 text-center">
+              <div className="bg-gradient-to-b from-rose-50 to-gold-30 rounded-2xl p-4 max-h-48 overflow-y-auto">
+                <p className="text-rose-800 leading-relaxed whitespace-pre-line text-lg font-medium">
+                  {currentSong.lyrics}
+                </p>
+              </div>
+            </div>
+          )}
         </section>
 
         {showAddForm && (
@@ -157,6 +182,15 @@ function App() {
                   value={newSong.artist}
                   onChange={(e) => setNewSong({ ...newSong, artist: e.target.value })}
                   className="px-4 py-3 rounded-xl border border-rose-200 bg-white/80 text-rose-900 placeholder-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <textarea
+                  placeholder="Lyrics (optional, one line per row)"
+                  value={newSong.lyrics || ''}
+                  onChange={(e) => setNewSong({ ...newSong, lyrics: e.target.value })}
+                  rows={4}
+                  className="w-full px-4 py-3 rounded-xl border border-rose-200 bg-white/80 text-rose-900 placeholder-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent resize-none"
                 />
               </div>
               {error && <p className="text-rose-600 text-sm">{error}</p>}
@@ -251,6 +285,32 @@ function App() {
         </section>
 
         <footer className="mt-8 text-center text-rose-700/50 text-sm">
+          <div className="flex justify-center gap-4 mb-2">
+            <button
+              onClick={() => {
+                const blob = new Blob([JSON.stringify(playlist, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'birthday-playlist.json';
+                a.click();
+              }}
+              className="underline hover:no-underline text-xs opacity-50 hover:opacity-100"
+            >
+              Export
+            </button>
+            <button
+              onClick={() => {
+                if (confirm('Reset to default playlist? Your songs will be lost.')) {
+                  setPlaylist(initialPlaylist);
+                  setCurrentIndex(0);
+                }
+              }}
+              className="underline hover:no-underline text-xs opacity-50 hover:opacity-100"
+            >
+              Reset
+            </button>
+          </div>
           <p>con ❤️ para Mam</p>
         </footer>
       </div>

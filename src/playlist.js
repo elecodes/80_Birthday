@@ -5,6 +5,11 @@ export const initialPlaylist = [
     artist: "Las Mananitas",
     youtubeUrl: "https://www.youtube.com/watch?v=PnRrfF12qs0",
     youtubeId: "PnRrfF12qs0",
+    lyrics: `Muy felices te queremos
+con amor y alegría
+que cumplas muchos años más
+en tu día
+Feliz cumpleaños Mamita`,
   },
   {
     id: 2,
@@ -12,6 +17,14 @@ export const initialPlaylist = [
     artist: "Jorge A. Marrón",
     youtubeUrl: "https://www.youtube.com/watch?v=6hHPfA73_jg",
     youtubeId: "6hHPfA73_jg",
+    lyrics: `Cielito lindo, cielito lindo
+de mi corazón
+Cielito lindo, cielito lindo
+que tienes alma de luz
+Ay, ay, ay, ay
+Canta y no llores
+porque cantas feliz
+como un cielo se ve`,
   },
   {
     id: 3,
@@ -19,6 +32,7 @@ export const initialPlaylist = [
     artist: "Jesse & Joy",
     youtubeUrl: "https://www.youtube.com/watch?v=JF-gf7fMt-k",
     youtubeId: "JF-gf7fMt-k",
+    lyrics: null,
   },
   {
     id: 4,
@@ -26,6 +40,7 @@ export const initialPlaylist = [
     artist: "Jesse & Joy",
     youtubeUrl: "https://www.youtube.com/watch?v=6tD2TYG8jFw",
     youtubeId: "6tD2TYG8jFw",
+    lyrics: null,
   },
   {
     id: 5,
@@ -33,6 +48,7 @@ export const initialPlaylist = [
     artist: "Coldplay",
     youtubeUrl: "https://www.youtube.com/watch?v=2uGvFaqFJ3w",
     youtubeId: "2uGvFaqFJ3w",
+    lyrics: null,
   },
   {
     id: 6,
@@ -40,6 +56,7 @@ export const initialPlaylist = [
     artist: "Stevie Wonder",
     youtubeUrl: "https://www.youtube.com/watch?v=fJ9rUz0OcEo",
     youtubeId: "fJ9rUz0OcEo",
+    lyrics: null,
   },
 ];
 
