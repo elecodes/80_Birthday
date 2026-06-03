@@ -1,35 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { initialPlaylist, getYoutubeEmbedUrl, extractYoutubeId } from './playlist';
 
-const STORAGE_KEY = 'birthday-playlist';
-
-function getSavedPlaylist() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.warn('Failed to load playlist from localStorage');
-  }
-  return initialPlaylist;
-}
-
 function App() {
-  const [playlist, setPlaylist] = useState(getSavedPlaylist);
+  const [playlist, setPlaylist] = useState(initialPlaylist);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newSong, setNewSong] = useState({ title: '', artist: '', youtubeUrl: '', lyrics: '' });
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(playlist));
-    } catch (e) {
-      console.warn('Failed to save playlist');
-    }
-  }, [playlist]);
 
   const currentSong = playlist[currentIndex];
 
