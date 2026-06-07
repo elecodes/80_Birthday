@@ -501,7 +501,7 @@ function App() {
               setShowDropdown(!showDropdown);
               if (!showDropdown) setShowAddForm(false);
             }}
-            className={`w-full p-5 md:p-8 rounded-[2.5rem] transition-all duration-500 flex items-center justify-between border-2 group relative z-10 ${
+            className={`w-full p-6 md:p-10 rounded-[2.5rem] transition-all duration-500 flex items-center justify-between border-2 group relative z-10 ${
               showDropdown 
                 ? 'bg-white border-rose-200 shadow-2xl scale-[1.01]' 
                 : 'bg-white/60 border-white/80 hover:bg-white/80 hover:border-rose-100 shadow-xl'
@@ -555,7 +555,7 @@ function App() {
               )}
 
               {/* Search and Filters */}
-              <div className="p-6 border-b border-rose-50 bg-white">
+              <div className="p-6 md:p-8 border-b border-rose-50 bg-white">
                 <div className="flex gap-2 mb-5 overflow-x-auto pb-1 no-scrollbar">
                   <button 
                     onClick={() => setSearchType('both')}
@@ -606,9 +606,9 @@ function App() {
                       return (
                         <button
                           onClick={() => handleSongClick(actualIndex)}
-                          className={`w-full text-left px-8 py-6 transition-all duration-500 flex items-center gap-8 group cursor-pointer relative ${
-                            isActive ? 'bg-rose-50/80' : isMoodMatch ? 'bg-gradient-to-r from-rose-50/60 via-white to-white hover:from-rose-50 hover:via-rose-50/30' : 'hover:bg-rose-50/40'
-                          }`}
+className={`w-full text-left px-6 md:px-10 py-5 transition-all duration-500 flex items-center gap-4 md:gap-8 group cursor-pointer relative ${
+                              isActive ? 'bg-rose-50/80' : isMoodMatch ? 'bg-gradient-to-r from-rose-50/60 via-white to-white hover:from-rose-50 hover:via-rose-50/30' : 'hover:bg-rose-50/40'
+                            }`}
                         >
                           {/* Mood match accent bar */}
                           {isMoodMatch && (
@@ -701,7 +701,7 @@ function App() {
                 )}
 
                 {totalPages > 1 && (
-                  <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-rose-50">
+                  <div className="flex items-center justify-between px-6 md:px-10 py-4 bg-white border-t border-rose-50">
                     <button
                       onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
                       disabled={safePage === 0}

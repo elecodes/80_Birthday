@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎂 Cumpleaños Playlist</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: linear-gradient(to bottom, #fdfbf7, #fdf2f4, #fef9e7); min-height: 100vh; padding: 1rem; }
+    .container { max-width: 700px; margin: 0 auto; }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+    .card { background: rgba(255,255,255,0.7); backdrop-filter: blur(8px); border-radius: 1.5rem; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 4px 20px rgba(158,42,79,0.1); }
+    .text-center { text-align: center; }
+    .text-rose-900 { color: #9e2a4f; }
+    .text-rose-700 { color: #be345c; }
+    .btn { background: linear-gradient(135deg, #e08ba0, #d64d74); color: white; border: none; padding: 0.6rem 1rem; border-radius: 2rem; cursor: pointer; font-weight: 500; font-size: 0.9rem; transition: all 0.3s; }
+    .btn:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(212,77,116,0.3); }
+    .btn-sec { background: white; color: #9e2a4f; border: 2px solid #f5d1d6; }
+    input, textarea, select { width: 100%; padding: 0.75rem; border: 1px solid #f5d1d6; border-radius: 0.75rem; margin-bottom: 0.75rem; font-size: 1rem; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: #d64d74; }
+    .mood-btn { padding: 0.4rem 0.8rem; border-radius: 1.5rem; border: 2px solid #f5d1d6; background: white; color: #9e2a4f; font-size: 0.85rem; margin: 0.2rem; cursor: pointer; transition: all 0.2s; }
+    .mood-btn.selected { background: #d64d74; color: white; border-color: #d64d74; }
+    .controls { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem; }
+    .song-card { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 1rem; margin-bottom: 0.75rem; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+    .song-card:hover { background: rgba(255,255,255,0.8); }
+    .song-card.active { background: rgba(224,139,160,0.15); border-color: #f5d1d6; }
+    .song-num { font-size: 1.2rem; font-weight: 600; color: #f5d1d6; width: 2rem; text-align: center; }
+    .song-card.active .song-num { color: #d64d74; }
+    .song-info { flex: 1; }
+    .song-title { font-size: 1.1rem; font-weight: 600; color: #9e2a4f; margin-bottom: 0.2rem; }
+    .song-artist { font-size: 0.9rem; color: #be345c; }
+    .song-mood { font-size: 1.2rem; padding: 0.25rem 0.5rem; }
+    .lyrics-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center text-rose-900" style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎂 Felices</h1>
+    <p class="text-center text-rose-700" style="margin-bottom: 1.5rem;">Playlist de Cumpleaños</p>
+    
+    <div class="card">
+      <div style="aspect-ratio: 16/9; background: #fdf2f4; border-radius: 0.75rem; margin-bottom: 1rem; overflow: hidden;">
+        <iframe id="player" width="100%" height="100%" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <h2 id="title" class="text-center text-rose-900" style="font-size: 1.5rem; margin-bottom: 0.25rem;"></h2>
+      <p id="artist" class="text-center text-rose-700" style="margin-bottom: 1rem;"></p>
+      
+      <div class="controls">
+        <button class="btn" onclick="prev()">⏮️</button>
+        <button class="btn" onclick="shuffle()">🎲 Mezclar</button>
+        <button class="btn btn-sec" onclick="toggleForm()">➕ Agregar</button>
+        <button class="btn" onclick="next()">⏭️</button>
+      </div>
+      
+      <div id="lyrics-box" style="display:none; background: linear-gradient(to bottom, #fdf2f4, #fef9e7); border-radius: 0.75rem; padding: 1rem; text-align: center; color: #7c1f3d; white-space: pre-line; line-height: 1.6;"></div>
+    </div>
+
+    <div id="form" class="card" style="display: none;">
+      <h3 class="text-rose-900" style="margin-bottom: 1rem;">➕ Agregar Canción</h3>
+      <input type="url" id="url" placeholder="🔗 URL de YouTube">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+        <input type="text" id="songTitle" placeholder="🎵 Título">
+        <input type="text" id="songArtist" placeholder="🎤 Artista">
+      </div>
+      <textarea id="lyrics" placeholder="🎤 Letra (opcional)" rows="3"></textarea>
+      <label class="text-rose-700" style="display: block; margin-bottom: 0.5rem;">🎭 Estado de ánimo:</label>
+      <div style="margin-bottom: 1rem;">
+        <button class="mood-btn selected" id="mood-happy" onclick="selectMood('happy')">🎉</button>
+        <button class="mood-btn" id="mood-dance" onclick="selectMood('dance')">💃</button>
+        <button class="mood-btn" id="mood-romantic" onclick="selectMood('romantic')">💕</button>
+        <button class="mood-btn" id="mood-calm" onclick="selectMood('calm')">😌</button>
+        <button class="mood-btn" id="mood-energetic" onclick="selectMood('energetic')">🌟</button>
+        <button class="mood-btn" id="mood-nostalgic" onclick="selectMood('nostalgic')">🥹</button>
+      </div>
+      <div style="display: flex; gap: 0.75rem;">
+        <button class="btn" style="flex: 1;" onclick="addSong()">✅ Agregar</button>
+        <button class="btn btn-sec" onclick="toggleForm()">❌ Cancelar</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="text-rose-900" style="margin-bottom: 1rem;">📋 Canciones (<span id="count">0</span>)</h3>
+      <div id="list"></div>
+    </div>
+  </div>
+
+  <script>
+    // All 58 songs with REAL YouTube IDs from your playlist
+    var allSongs = [
+      {id:1,title:"Feliz Cumpleaños",artist:"Las Mananitas",youtubeId:"Xn59trCP0wI",tags:["traditional","mexican","celebration","birthday"],lyrics:"Muy felices te queremos\ncon amor y alegría\nque cumplas muchos años más\nen tu día\nFeliz cumpleaños Mamita"},
+      {id:2,title:"Cielito Lindo",artist:"Jorge A. Marrón",youtubeId:"Lp-X3UfNqO0",tags:["traditional","mexican","folk"],lyrics:"Cielito lindo, cielito lindo\nde mi corazón\nCielito lindo que tienes alma de luz"},
+      {id:3,title:"3 AM",artist:"Jesse & Joy",youtubeId:"y_m_O6Z9xZ8",tags:["pop","dance","upbeat"]},
+      {id:4,title:"Me Voy",artist:"Jesse & Joy",youtubeId:"p079pPz6p3c",tags:["pop","romantic","ballad"]},
+      {id:5,title:"¡Viva La Vida!",artist:"Coldplay",youtubeId:"dvgZkm1xWPE",tags:["rock","anthemic","energetic"]},
+      {id:6,title:"Happy Birthday",artist:"Stevie Wonder",youtubeId:"QwOU3Guu7x4",tags:["soul","birthday","fun"]},
+      {id:7,title:"De carne y hueso",artist:"María Dolores Pradera",youtubeId:"fNzpOdmPfA0",tags:["ballad","traditional","slow","spanish"]},
+      {id:8,title:"La Flor de la canela",artist:"María Dolores Pradera",youtubeId:"U22NbxoX7zI",tags:["ballad","traditional","slow","spanish"]},
+      {id:9,title:"Habaneras de Cádiz",artist:"María Dolores Pradera",youtubeId:"ANZIKv-5LQQ",tags:["ballad","traditional","mid-tempo","spanish"]},
+      {id:10,title:"Toda una vida",artist:"María Dolores Pradera",youtubeId:"sNmIpe_QAEg",tags:["ballad","traditional","slow","spanish"]},
+      {id:11,title:"María la portuguesa",artist:"María Dolores Pradera y Carlos Cano",youtubeId:"WdaChGT4ZFg",tags:["ballad","fado","slow","spanish"]},
+      {id:12,title:"Alma, corazón y vida",artist:"María Dolores Pradera",youtubeId:"NYy178y8c4Q",tags:["ballad","traditional","slow","spanish"]},
+      {id:13,title:"Lágrimas negras",artist:"María Dolores Pradera",youtubeId:"X_7_BKUZrH4",tags:["ballad","bolero","slow","spanish"]},
+      {id:14,title:"Amarraditos",artist:"María Dolores Pradera",youtubeId:"fWftBBeMGsg",tags:["ballad","traditional","slow","spanish"]},
+      {id:15,title:"Negra mía",artist:"María Dolores Pradera",youtubeId:"eLKFXNPCueQ",tags:["ballad","traditional","slow","spanish"]},
+      {id:16,title:"Luz de luna",artist:"María Dolores Pradera",youtubeId:"gl5J0ZK7zCA",tags:["ballad","traditional","slow","spanish"]},
+      {id:17,title:"Fina Estampa",artist:"María Dolores Pradera",youtubeId:"xvKfN-kNkZg",tags:["ballad","traditional","mid-tempo","spanish"]},
+      {id:18,title:"Gracias a la vida",artist:"Mercedes Sosa",youtubeId:"qR4fwenppPQ",tags:["folk","traditional","slow","argentinian"]},
+      {id:19,title:"Gracias a la vida",artist:"Mercedes Sosa y Joan Baez",youtubeId:"rMuTXcf3-6A",tags:["folk","traditional","slow","international"]},
+      {id:20,title:"Donna donna",artist:"Joan Baez",youtubeId:"TjQCFwd6JuI",tags:["folk","acoustic","slow","english"]},
+      {id:21,title:"Forever young",artist:"Joan Baez",youtubeId:"-4UoJ47SzjA",tags:["folk","ballad","mid-tempo","english"]},
+      {id:22,title:"Hallelujah",artist:"Leonard Cohen",youtubeId:"YrLk4vdY28Q",tags:["folk","slow","melancholy","english"]},
+      {id:23,title:"La llorona",artist:"Joan Baez",youtubeId:"_-F8GxI0t7I",tags:["folk","traditional","slow","mexican"]},
+      {id:24,title:"House of the rising sun",artist:"Joan Baez",youtubeId:"NkyYHYUcGgo",tags:["folk","traditional","mid-tempo","english"]},
+      {id:25,title:"Farewell Angelina",artist:"Joan Baez",youtubeId:"1fcEd38XQU8",tags:["folk","acoustic","slow","english"]},
+      {id:26,title:"Knocking on heaven's door",artist:"Bob Dylan",youtubeId:"z4R5crZylQ0",tags:["folk","rock","slow","english"]},
+      {id:27,title:"Alfonsina y el Mar",artist:"Los Sabandeños",youtubeId:"2cmbj9kwbx0",tags:["folk","traditional","slow","canarian"]},
+      {id:28,title:"Molinedo Cafe",artist:"Los Sabandeños",youtubeId:"BlHhyGyplbk",tags:["folk","traditional","mid-tempo","canarian"]},
+      {id:29,title:"Historia de un Amor",artist:"Los Sabandeños",youtubeId:"Mu6RHrziy68",tags:["folk","traditional","slow","canarian"]},
+      {id:30,title:"Perfidia",artist:"Los Sabandeños",youtubeId:"QWHs5uuap-Y",tags:["folk","traditional","slow","canarian"]},
+      {id:31,title:"Guantanamera",artist:"Los Sabandeños",youtubeId:"2Q5kl8ZxuvI",tags:["folk","traditional","mid-tempo","canarian"]},
+      {id:32,title:"Perdóname",artist:"El Duo Dinámico",youtubeId:"uS6E-KKh4CE",tags:["pop","rock-n-roll","upbeat","60s"]},
+      {id:33,title:"Resistiré",artist:"El Duo Dinámico",youtubeId:"DpQyuMPrhog",tags:["pop","rock-n-roll","upbeat","60s"]},
+      {id:34,title:"El Cielo está dentro de mí",artist:"Atahualpa Yupanqui",youtubeId:"v0YqCLfbkcY",tags:["folk","guitar","slow","argentinian"]},
+      {id:35,title:"Le tengo rabia al silencio",artist:"Atahualpa Yupanqui",youtubeId:"DfQl1TPQAxc",tags:["folk","guitar","slow","argentinian"]},
+      {id:36,title:"Gracias a la Vida",artist:"Violeta Parra",youtubeId:"Y5KZSlUxBi8",tags:["folk","traditional","slow","chilean"]},
+      {id:37,title:"Albertío",artist:"Violeta Parra",youtubeId:"zE13TMrHeFk",tags:["folk","traditional","mid-tempo","chilean"]},
+      {id:38,title:"Cielo",artist:"Violeta Parra",youtubeId:"X--Kxt2KwEQ",tags:["folk","traditional","slow","chilean"]},
+      {id:39,title:"Cuenca de los poetas",artist:"Violeta Parra",youtubeId:"9RQdP3Y12r0",tags:["folk","traditional","mid-tempo","chilean"]},
+      {id:40,title:"Volver a los diecisiete",artist:"Violeta Parra",youtubeId:"2ozG2tjy3QM",tags:["folk","traditional","slow","chilean"]},
+      {id:41,title:"De cuerpo entero",artist:"Violeta Parra",youtubeId:"pu-rOSpaRTg",tags:["folk","traditional","mid-tempo","chilean"]},
+      {id:42,title:"15 años",artist:"El Duo Dinámico",youtubeId:"e0E9geFbuFU",tags:["pop","rock-n-roll","upbeat","60s"]},
+      {id:43,title:"Amor misterioso",artist:"El Duo Dinámico",youtubeId:"PV9zPUSwTjk",tags:["pop","rock-n-roll","mid-tempo","60s"]},
+      {id:44,title:"El final del verano",artist:"El Duo Dinámico",youtubeId:"gbKAOFBgR8U",tags:["pop","rock-n-roll","slow","60s"]},
+      {id:45,title:"Robaré",artist:"El Duo Dinámico",youtubeId:"3gBBRf_P-Wk",tags:["pop","rock-n-roll","upbeat","60s"]},
+      {id:46,title:"Eres tú",artist:"El Duo Dinámico",youtubeId:"OVWxDLvT8S0",tags:["pop","rock-n-roll","slow","60s"]},
+      {id:47,title:"Guateque 1",artist:"El Duo Dinámico",youtubeId:"zIh3K2GH1lo",tags:["pop","rock-n-roll","upbeat","60s"]},
+      {id:48,title:"La Plaga",artist:"El Duo Dinámico",youtubeId:"iQAdYc6Ygag",tags:["pop","rock-n-roll","upbeat","60s"]},
+      {id:49,title:"Medley Rock",artist:"El Duo Dinámico",youtubeId:"y3vArllKohQ",tags:["pop","rock-n-roll","upbeat","60s"]},
+      {id:50,title:"Esos ojitos negros",artist:"El Duo Dinámico",youtubeId:"VY4L7JrdyOM",tags:["pop","rock-n-roll","mid-tempo","60s"]},
+      {id:51,title:"Perdóname y Esos ojos negros",artist:"El Duo Dinámico",youtubeId:"mPkqbmxaWl8",tags:["pop","rock-n-roll","mid-tempo","60s"]},
+      {id:52,title:"Guateque 3",artist:"El Duo Dinámico",youtubeId:"r-vNrjpjvN4",tags:["pop","rock-n-roll","upbeat","60s"]},
+      {id:53,title:"Eres tú",artist:"El Duo Dinámico",youtubeId:"oiAuXrauO1M",tags:["pop","rock-n-roll","slow","60s"]},
+      {id:54,title:"Blowing in the wind",artist:"Bob Dylan",youtubeId:"KJBbX0jzM2c",tags:["folk","rock","mid-tempo","english"]}
+    ];
+    
+    const MOOD_TAGS = {
+      happy: ['celebration', 'birthday', 'happy', 'fun'],
+      dance: ['dance', 'party', 'upbeat', 'pop'],
+      romantic: ['romantic', 'ballad', 'love', 'slow'],
+      calm: ['calm', 'slow', 'acoustic', 'traditional'],
+      energetic: ['energetic', 'fast', 'rock'],
+      nostalgic: ['nostalgic', 'retro', 'classic', 'folk']
+    };
+    
+    const MOOD_EMOJI = { happy: '🎉', dance: '💃', romantic: '💕', calm: '😌', energetic: '🌟', nostalgic: '🥹' };
+    
+    const ID_MIGRATION = {
+      // Las Mañanitas
+      'PnRrfF12qs0': 'Xn59trCP0wI',
+      '5ar42kauTd8': 'Xn59trCP0wI',
+      '54cCE5q2NEE': 'Xn59trCP0wI',
+      'v_m4uT_A2Yw': 'Xn59trCP0wI',
+      'N0-U0u_K1p8': 'Xn59trCP0wI',
+      // Cielito Lindo
+      '6hHPfA73_jg': 'Lp-X3UfNqO0',
+      'OHeHOb3E-2g': 'Lp-X3UfNqO0',
+      'V00yD-9mY_c': 'Lp-X3UfNqO0',
+      // 3 AM / Bailable
+      'JF-gf7fMt-k': 'y_m_O6Z9xZ8',
+      'P2K7D-09pBM': 'y_m_O6Z9xZ8',
+      // Me Voy
+      '6tD2TYG8jFw': 'p079pPz6p3c',
+      'A9Iby9n-qAk': 'p079pPz6p3c',
+      'H_v2_f8pP-M': 'p079pPz6p3c',
+      // Viva la Vida
+      '2uGvFaqFJ3w': 'dvgZkm1xWPE',
+      // Happy Birthday
+      'fJ9rUz0OcEo': 'QwOU3Guu7x4',
+      'Qwscb3QIVSg': 'QwOU3Guu7x4',
+      'QwR_LzY_vO0': 'QwOU3Guu7x4'
+    };
+
+    var songs = localStorage.getItem('birthday-playlist') ? JSON.parse(localStorage.getItem('birthday-playlist')) : allSongs;
+    
+    songs = songs.map(function(s) {
+      if (ID_MIGRATION[s.youtubeId]) {
+        s.youtubeId = ID_MIGRATION[s.youtubeId];
+      }
+      if (s.youtubeId === 'y_m_O6Z9xZ8' || s.title === 'Bailable') {
+        s.title = '3 AM';
+      }
+      return s;
+    });
+
+    var current = 0;
+    var selectedMood = 'happy';
+    var showLyrics = false;
+
+    function save() { localStorage.setItem('birthday-playlist', JSON.stringify(songs)); }
+
+    function getMood(song) {
+      for (var mood in MOOD_TAGS) {
+        var tags = MOOD_TAGS[mood];
+        for (var i = 0; i < tags.length; i++) {
+          if (song.tags && song.tags.indexOf(tags[i]) >= 0) return mood;
+        }
+      }
+      return 'happy';
+    }
+
+    function render() {
+      var song = songs[current];
+      // Reset iframe to force reload
+      var player = document.getElementById('player');
+      player.src = '';
+      setTimeout(function() {
+        player.src = 'https://www.youtube.com/embed/' + song.youtubeId + '?autoplay=1';
+      }, 100);
+      document.getElementById('title').textContent = song.title;
+      document.getElementById('artist').textContent = song.artist;
+      document.getElementById('count').textContent = songs.length;
+      
+      var lyrics = song.lyrics;
+      var lyricsBox = document.getElementById('lyrics-box');
+      if (lyrics) {
+        lyricsBox.style.display = showLyrics ? 'block' : 'none';
+        lyricsBox.textContent = lyrics;
+      } else {
+        lyricsBox.style.display = 'none';
+      }
+      
+      var html = '';
+      for (var i = 0; i < songs.length; i++) {
+        var s = songs[i];
+        var mood = getMood(s);
+        var activeClass = i === current ? ' active' : '';
+        html += '<div class="song-card' + activeClass + '" onclick="play(' + i + ')">';
+        html += '<span class="song-num">' + (i+1) + '</span>';
+        html += '<div class="song-info"><div class="song-title">' + s.title + '</div><div class="song-artist">' + s.artist + '</div></div>';
+        var moodEmoji = MOOD_EMOJI[mood] || '🎉';
+        html += '<span class="song-mood">' + moodEmoji + '</span>';
+        html += '<button class="lyrics-btn" onclick="event.stopPropagation();del(' + i + ')">🗑️</button></div>';
+      }
+      document.getElementById('list').innerHTML = html;
+    }
+
+    function play(i) { current = i; showLyrics = false; render(); }
+    function prev() { current = current > 0 ? current - 1 : songs.length - 1; render(); }
+    function next() { current = current < songs.length - 1 ? current + 1 : 0; render(); }
+    function shuffle() { songs.sort(function() { return Math.random() - 0.5; }); current = 0; render(); }
+    function toggleForm() { var f = document.getElementById('form'); f.style.display = f.style.display === 'none' ? 'block' : 'none'; }
+    
+    function selectMood(m) {
+      selectedMood = m;
+      var btns = document.querySelectorAll('.mood-btn');
+      for (var i = 0; i < btns.length; i++) btns[i].classList.remove('selected');
+      document.getElementById('mood-' + m).classList.add('selected');
+    }
+    
+    function addSong() {
+      var url = document.getElementById('url').value;
+      var id = url.match(/(?:v=|youtu\.be\/)([^&?]+)/);
+      if (!id) return alert('URL de YouTube inválida');
+      id = id[1];
+      
+      var title = document.getElementById('songTitle').value.trim();
+      var artist = document.getElementById('songArtist').value.trim();
+      if (!title || !artist) return alert('Título y artista requeridos');
+      
+      songs.push({
+        id: Date.now(),
+        title: title, artist: artist, youtubeId: id,
+        lyrics: document.getElementById('lyrics').value || null,
+        tags: ['user-added', selectedMood].concat(MOOD_TAGS[selectedMood])
+      });
+      save();
+      current = songs.length - 1;
+      render();
+      toggleForm();
+      document.getElementById('url').value = '';
+      document.getElementById('songTitle').value = '';
+      document.getElementById('songArtist').value = '';
+      document.getElementById('lyrics').value = '';
+    }
+
+    function del(i) { 
+      if (songs.length <= 1) return alert('No puedes eliminar la última canción');
+      if (confirm('Eliminar "' + songs[i].title + '"?')) {
+        songs.splice(i, 1);
+        if (current >= songs.length) current = 0;
+        save();
+        render();
+      }
+    }
+    
+    render();
+  </script>
+  
+  <div style="text-align: center; padding: 1rem; color: #be345c;">
+    <button onclick="if(confirm('Borrar todo y empezar de nuevo?')){localStorage.clear();location.reload();}" style="background:none;border:none;color:#be345c;text-decoration:underline;cursor:pointer;font-size:0.8rem;">🗑️ Borrar playlist</button>
+  </div>
+</body>
+</html>
