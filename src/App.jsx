@@ -98,10 +98,6 @@ function App() {
     }
   }, [currentIndex, playlist, player]);
 
-  useEffect(() => {
-    setCurrentPage(0);
-  }, [searchTerm, searchType, playlist]);
-
   const goToPrevious = () => {
     setCurrentIndex((prev) => (prev === 0 ? playlist.length - 1 : prev - 1));
   };
@@ -236,6 +232,10 @@ function App() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState('both'); // 'title', 'artist', 'both'
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [searchTerm, searchType, playlist]);
 
   const filteredPlaylist = playlist.filter(song => {
     const term = searchTerm.toLowerCase();
