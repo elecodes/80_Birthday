@@ -16,6 +16,8 @@ function App() {
   const [player, setPlayer] = useState(null);
   const [songErrors, setSongErrors] = useState(new Set());
   const addFormRef = useRef(null);
+  const ITEMS_PER_PAGE = 10;
+  const [currentPage, setCurrentPage] = useState(0);
 
   // Initialize YouTube API
   useEffect(() => {
@@ -96,7 +98,9 @@ function App() {
     }
   }, [currentIndex, playlist, player]);
 
-
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [searchTerm, searchType, playlist]);
 
   const goToPrevious = () => {
     setCurrentIndex((prev) => (prev === 0 ? playlist.length - 1 : prev - 1));
@@ -239,6 +243,10 @@ function App() {
     if (searchType === 'artist') return song.artist.toLowerCase().includes(term);
     return song.title.toLowerCase().includes(term) || song.artist.toLowerCase().includes(term);
   });
+
+  const totalPages = Math.ceil(filteredPlaylist.length / ITEMS_PER_PAGE);
+  const safePage = Math.min(currentPage, Math.max(0, totalPages - 1));
+  const paginatedSongs = filteredPlaylist.slice(safePage * ITEMS_PER_PAGE, (safePage + 1) * ITEMS_PER_PAGE);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#fdfbf7] via-[#fdf2f4] to-[#fef9e7]">
@@ -587,10 +595,10 @@ function App() {
               </div>
 
               {/* Song List */}
-              <div className="max-h-[500px] overflow-y-auto bg-white custom-scrollbar">
+              <div className="bg-white">
                 {filteredPlaylist.length > 0 ? (
                   <div className="divide-y divide-rose-50/50">
-                    {filteredPlaylist.map((song) => {
+                    {paginatedSongs.map((song) => {
                       const actualIndex = playlist.findIndex(s => s.id === song.id);
                       const isActive = actualIndex === currentIndex;
                       const isMoodMatch = moodMatchedIds.has(song.id);
@@ -689,6 +697,50 @@ function App() {
                     </div>
                     <p className="text-rose-400 font-medium italic">No se encontraron resultados</p>
                     <button onClick={() => setSearchTerm('')} className="text-sm text-rose-600 font-bold uppercase tracking-widest mt-4 hover:text-rose-700 transition-colors">Limpiar búsqueda</button>
+                  </div>
+                )}
+
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-rose-50">
+                    <button
+                      onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
+                      disabled={safePage === 0}
+                      className={`px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all ${
+                        safePage === 0
+                          ? 'text-rose-200 cursor-not-allowed'
+                          : 'text-rose-500 hover:bg-rose-50'
+                      }`}
+                    >
+                      ← Anterior
+                    </button>
+
+                    <div className="flex items-center gap-1.5">
+                      {Array.from({ length: totalPages }, (_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setCurrentPage(i)}
+                          className={`w-8 h-8 rounded-xl text-[12px] font-bold transition-all ${
+                            i === safePage
+                              ? 'bg-rose-500 text-white shadow-sm'
+                              : 'text-rose-400 hover:bg-rose-50'
+                          }`}
+                        >
+                          {i + 1}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))}
+                      disabled={safePage === totalPages - 1}
+                      className={`px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all ${
+                        safePage === totalPages - 1
+                          ? 'text-rose-200 cursor-not-allowed'
+                          : 'text-rose-500 hover:bg-rose-50'
+                      }`}
+                    >
+                      Siguiente →
+                    </button>
                   </div>
                 )}
               </div>
