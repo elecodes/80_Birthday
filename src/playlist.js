@@ -1,56 +1,5 @@
 export const initialPlaylist = [
   {
-    id: 1,
-    title: "Feliz Cumpleaños",
-    artist: "Las Mananitas",
-    youtubeUrl: "https://www.youtube.com/watch?v=Xn59trCP0wI",
-    youtubeId: "Xn59trCP0wI",
-    lyrics: `Muy felices te queremos
-con amor y alegría
-que cumplas muchos años más
-en tu día
-Feliz cumpleaños Mamita`,
-    tags: ["traditional", "mexican", "celebration", "birthday"],
-  },
-  {
-    id: 2,
-    title: "Cielito Lindo",
-    artist: "Jorge A. Marrón",
-    youtubeUrl: "https://www.youtube.com/watch?v=Lp-X3UfNqO0",
-    youtubeId: "Lp-X3UfNqO0",
-    lyrics: `Cielito lindo, cielito lindo
-de mi corazón
-Cielito lindo que tienes alma de luz`,
-    tags: ["traditional", "mexican", "folk"],
-  },
-  {
-    id: 3,
-    title: "3 AM",
-    artist: "Jesse & Joy",
-    youtubeUrl: "https://www.youtube.com/watch?v=y_m_O6Z9xZ8",
-    youtubeId: "y_m_O6Z9xZ8",
-    lyrics: null,
-    tags: ["pop", "dance", "upbeat"],
-  },
-  {
-    id: 4,
-    title: "Me Voy",
-    artist: "Jesse & Joy",
-    youtubeUrl: "https://www.youtube.com/watch?v=p079pPz6p3c",
-    youtubeId: "p079pPz6p3c",
-    lyrics: null,
-    tags: ["pop", "romantic", "ballad"],
-  },
-  {
-    id: 5,
-    title: "¡Viva La Vida!",
-    artist: "Coldplay",
-    youtubeUrl: "https://www.youtube.com/watch?v=dvgZkm1xWPE",
-    youtubeId: "dvgZkm1xWPE",
-    lyrics: null,
-    tags: ["rock", "anthemic", "energetic"],
-  },
-  {
     id: 6,
     title: "Happy Birthday",
     artist: "Stevie Wonder",

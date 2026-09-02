@@ -7,7 +7,7 @@ A celebratory, high-fidelity web music player created for Mom's 80th birthday. B
 ## ✨ Features
 
 - **🎬 YouTube Playback Engine:** Seamless video embedding with autoplay, automatic track progression on end, and error recovery for restricted videos.
-- **🎶 71 Curated Songs:** Pre-loaded collection embedded in source code with artist metadata, lyrics, and mood tags.
+- **🎶 66 Curated Songs:** Pre-loaded collection embedded in source code with artist metadata, lyrics, and mood tags.
 - **✨ Smart Mood Shuffle:** Greedy tag-similarity algorithm to dynamically sequence songs according to selected mood filters (Happy 🎉, Dance 💃, Romantic 💕, Calm 😌, Energetic 🌟, Nostalgic 🥹).
 - **🎨 Glassmorphism & OKLCH Theme:** Modern translucent cards (`backdrop-filter: blur(16px)`), warm ambient glows synchronized with the active track's mood, and fluid micro-animations.
 - **📊 Live Audio Visualizer:** Dynamic equalizer bars reacting to music playback.
