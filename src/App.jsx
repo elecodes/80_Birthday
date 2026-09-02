@@ -249,14 +249,24 @@ function App() {
   const paginatedSongs = filteredPlaylist.slice(safePage * ITEMS_PER_PAGE, (safePage + 1) * ITEMS_PER_PAGE);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-5xl mx-auto px-4 py-8 md:py-16">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Ambient background glows for glassmorphic depth */}
+      <div className="ambient-bg-glow w-96 h-96 bg-primary/20 -top-20 -left-20 animate-soft-float" />
+      <div className="ambient-bg-glow w-96 h-96 bg-secondary/20 top-1/3 -right-20 animate-soft-float" style={{ animationDelay: '-2s' }} />
+      <div className="ambient-bg-glow w-80 h-80 bg-accent/20 bottom-10 left-10 animate-soft-float" style={{ animationDelay: '-1s' }} />
+
+      <div className="max-w-5xl mx-auto px-4 py-8 md:py-16 relative z-10">
         <header className="text-center mb-10">
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-foreground tracking-tight uppercase" style={{ textShadow: '3px 3px 0px var(--color-border)' }}>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-extrabold uppercase tracking-widest mb-4 shadow-sm backdrop-blur-md">
+            <span>🎉</span> Special Edition Player
+          </div>
+          <h1 className="text-5xl md:text-6xl lg:text-8xl font-black tracking-tight uppercase bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent drop-shadow-sm">
             Felices
           </h1>
-          <p className="mt-2 text-muted-foreground text-sm md:text-base tracking-[0.2em] uppercase font-bold">
+          <p className="mt-3 text-muted-foreground text-sm md:text-base tracking-[0.25em] uppercase font-black opacity-90 flex items-center justify-center gap-2">
+            <span className="w-8 h-[2px] bg-primary/40 rounded-full inline-block"></span>
             Playlist de Cumpleaños
+            <span className="w-8 h-[2px] bg-primary/40 rounded-full inline-block"></span>
           </p>
         </header>
 
@@ -269,16 +279,16 @@ function App() {
               setShowMoodPicker(next);
               if (next) { setShowAddForm(false); setShowDropdown(false); }
             }}
-            className={`flex-1 px-6 py-4 rounded-2xl transition-all duration-500 flex items-center justify-center gap-3 uppercase border-2 group active:scale-95 text-[11px] font-black tracking-[0.15em] shadow-md ${
+            className={`flex-1 px-6 py-4 rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 uppercase border group active:scale-95 text-[11px] font-black tracking-[0.18em] shadow-md backdrop-blur-md ${
               showMoodPicker
-                ? 'bg-primary text-primary-foreground border-primary'
-                : 'bg-card text-muted-foreground border-border hover:bg-primary hover:text-primary-foreground hover:border-primary'
+                ? 'bg-primary text-primary-foreground border-primary glow-primary'
+                : 'glass-card text-foreground border-border/80 hover:bg-primary hover:text-primary-foreground hover:border-primary hover:glow-primary'
             }`}
           >
-            <svg style={{ width: '18px', height: '18px' }} className={`transition-transform duration-700 ${showMoodPicker ? 'rotate-180' : 'group-hover:rotate-180'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg style={{ width: '18px', height: '18px' }} className={`transition-transform duration-500 ${showMoodPicker ? 'rotate-180' : 'group-hover:rotate-180'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
             </svg>
-            {showMoodPicker ? 'CERRAR' : 'MEZCLAR SMART'}
+            {showMoodPicker ? 'CERRAR MOODS' : 'MEZCLAR SMART'}
           </button>
           <button
             type="button"
@@ -288,25 +298,30 @@ function App() {
               setShowAddForm(nextState);
               if (nextState) { setShowDropdown(false); setShowMoodPicker(false); }
             }}
-            className={`flex-1 px-6 py-4 rounded-2xl transition-all duration-500 shadow-md uppercase flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 text-[11px] font-black tracking-[0.15em] border-2 ${
+            className={`flex-1 px-6 py-4 rounded-2xl transition-all duration-300 shadow-md uppercase flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 text-[11px] font-black tracking-[0.18em] border backdrop-blur-md ${
               showAddForm 
-                ? 'bg-primary text-primary-foreground border-primary' 
-                : 'bg-primary text-primary-foreground border-transparent'
+                ? 'bg-primary text-primary-foreground border-primary glow-primary' 
+                : 'bg-primary text-primary-foreground border-transparent hover:bg-primary/90 glow-primary'
             }`}
           >
             <span className={`text-xl leading-none mb-0.5 transition-transform duration-500 ${showAddForm ? 'rotate-45' : ''}`}>+</span> 
-            {showAddForm ? 'CERRAR' : 'AGREGAR CANCIÓN'}
+            {showAddForm ? 'CERRAR FORM' : 'AGREGAR CANCIÓN'}
           </button>
         </div>
 
         {/* Mood Picker for Shuffle */}
         {showMoodPicker && (
-          <section className="bg-card rounded-2xl shadow-md p-6 md:p-8 mb-8 border border-border">
-            <div className="mb-5">
-              <h3 className="text-xl font-black text-foreground uppercase">
-                ¿Qué mood querés?
-              </h3>
-              <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">Elegí 1 o 2 moods para mezclar</p>
+          <section className="glass-panel rounded-3xl p-6 md:p-8 mb-8 border border-white/60 shadow-xl transition-all duration-500 animate-in fade-in slide-in-from-top-4">
+            <div className="mb-5 flex items-center justify-between">
+              <div>
+                <h3 className="text-xl font-black text-foreground uppercase tracking-wide">
+                  ¿Qué mood querés?
+                </h3>
+                <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">Elegí 1 o 2 moods para personalizar el orden</p>
+              </div>
+              <span className="text-xs font-black px-3 py-1 bg-primary/10 text-primary rounded-full">
+                {selectedShuffleMoods.length}/2 elegidos
+              </span>
             </div>
             <div className="flex flex-wrap gap-3 mb-6">
               {MOODS.map(m => {
@@ -317,16 +332,16 @@ function App() {
                     key={m.id}
                     type="button"
                     onClick={() => toggleShuffleMood(m.id)}
-                    className={`px-5 py-3.5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center gap-2.5 border-2 ${
+                    className={`px-5 py-3.5 rounded-2xl text-xs font-bold transition-all duration-300 flex items-center gap-2.5 border ${
                       isSelected
-                        ? 'bg-primary text-primary-foreground border-primary shadow-md'
-                        : 'bg-card text-muted-foreground border-border hover:border-primary/50'
+                        ? 'bg-primary text-primary-foreground border-primary shadow-md glow-primary scale-105'
+                        : 'glass-card text-muted-foreground border-border hover:border-primary/50 hover:text-foreground'
                     }`}
                   >
-                    <span className="text-lg">{m.emoji}</span>
+                    <span className="text-xl">{m.emoji}</span>
                     <span>{m.label}</span>
                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-black ${
-                      isSelected ? 'bg-primary-foreground/20 text-primary-foreground' : 'bg-muted/30 text-muted-foreground'
+                      isSelected ? 'bg-primary-foreground/20 text-primary-foreground' : 'bg-muted/50 text-muted-foreground'
                     }`}>{matchCount}</span>
                   </button>
                 );
@@ -337,10 +352,10 @@ function App() {
                 type="button"
                 onClick={() => handleSmartShuffle(selectedShuffleMoods)}
                 disabled={selectedShuffleMoods.length === 0}
-                className={`flex-[2] py-4 rounded-xl font-black uppercase tracking-widest transition-all duration-500 active:scale-95 flex items-center justify-center gap-3 text-[11px] ${
+                className={`flex-[2] py-4 rounded-xl font-black uppercase tracking-widest transition-all duration-300 active:scale-95 flex items-center justify-center gap-3 text-[11px] ${
                   selectedShuffleMoods.length > 0
-                    ? 'bg-primary text-primary-foreground shadow-md'
-                    : 'bg-muted/30 text-muted-foreground cursor-not-allowed'
+                    ? 'bg-primary text-primary-foreground shadow-md glow-primary hover:bg-primary/90'
+                    : 'bg-muted/40 text-muted-foreground/50 cursor-not-allowed border border-border/50'
                 }`}
               >
                 <svg style={{ width: '18px', height: '18px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -351,7 +366,7 @@ function App() {
               <button
                 type="button"
                 onClick={() => handleSmartShuffle([])}
-                className="flex-1 py-4 rounded-xl border-2 border-border text-muted-foreground font-black uppercase tracking-widest hover:bg-accent hover:text-accent-foreground transition-all duration-300 active:scale-95 text-[11px]"
+                className="flex-1 py-4 rounded-xl border border-border glass-card text-foreground font-black uppercase tracking-widest hover:bg-primary/10 hover:text-primary transition-all duration-300 active:scale-95 text-[11px]"
               >
                 Mezclar Todo
               </button>
@@ -363,18 +378,18 @@ function App() {
         {showAddForm && (
           <section 
             ref={addFormRef}
-            className="bg-card rounded-2xl shadow-md p-6 md:p-10 mb-10 border border-border"
+            className="glass-panel rounded-3xl p-6 md:p-10 mb-10 border border-white/60 shadow-2xl transition-all duration-500 animate-in fade-in slide-in-from-top-4"
           >
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h3 className="text-3xl font-black text-foreground uppercase leading-tight">
+                <h3 className="text-3xl font-black text-foreground uppercase tracking-tight leading-tight">
                   Nueva Canción
                 </h3>
-                <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">Comparte algo especial</p>
+                <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest mt-1">Comparte algo especial con la playlist</p>
               </div>
               <button 
                 onClick={() => setShowAddForm(false)}
-                className="w-12 h-12 rounded-xl bg-muted/30 text-muted-foreground flex items-center justify-center hover:bg-muted transition-all hover:rotate-90 duration-300"
+                className="w-11 h-11 rounded-2xl bg-muted/40 text-muted-foreground flex items-center justify-center hover:bg-destructive/10 hover:text-destructive transition-all hover:rotate-90 duration-300"
               >
                 <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -382,10 +397,10 @@ function App() {
               </button>
             </div>
             
-            <form onSubmit={handleAddSong} className="space-y-8">
-              <div className="space-y-3">
-                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-4 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+            <form onSubmit={handleAddSong} className="space-y-6">
+              <div className="space-y-2.5">
+                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-3 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
                   Enlace de YouTube
                 </label>
                 <input
@@ -393,15 +408,15 @@ function App() {
                   placeholder="https://www.youtube.com/watch?v=... o pega el link"
                   value={newSong.youtubeUrl}
                   onChange={(e) => setNewSong({ ...newSong, youtubeUrl: e.target.value })}
-                  className="w-full px-6 py-5 rounded-xl border-2 border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary focus:bg-card transition-all duration-300 text-base"
+                  className="input-field text-base"
                   required
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-4 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2.5">
+                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-3 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-primary"></span>
                     Título
                   </label>
                   <input
@@ -409,13 +424,13 @@ function App() {
                     placeholder="Ej: Bésame Mucho"
                     value={newSong.title}
                     onChange={(e) => setNewSong({ ...newSong, title: e.target.value })}
-                    className="w-full px-6 py-5 rounded-xl border-2 border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary focus:bg-card transition-all duration-300 text-base"
+                    className="input-field text-base"
                     required
                   />
                 </div>
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-4 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                <div className="space-y-2.5">
+                  <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-3 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-primary"></span>
                     Artista
                   </label>
                   <input
@@ -423,38 +438,38 @@ function App() {
                     placeholder="Ej: Luis Miguel"
                     value={newSong.artist}
                     onChange={(e) => setNewSong({ ...newSong, artist: e.target.value })}
-                    className="w-full px-6 py-5 rounded-xl border-2 border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary focus:bg-card transition-all duration-300 text-base"
+                    className="input-field text-base"
                     required
                   />
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-4 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+              <div className="space-y-2.5">
+                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-3 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-secondary"></span>
                   Letra (Opcional)
                 </label>
                 <textarea
-                  placeholder="Escribe la letra aquí..."
+                  placeholder="Escribe o pega la letra aquí..."
                   value={newSong.lyrics || ''}
                   onChange={(e) => setNewSong({ ...newSong, lyrics: e.target.value })}
                   rows={4}
-                  className="w-full px-6 py-5 rounded-xl border-2 border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary focus:bg-card transition-all duration-300 resize-none text-base"
+                  className="input-field resize-none text-base"
                 />
               </div>
 
-              <div className="space-y-4">
-                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-4 block">Estado de Ánimo</label>
-                <div className="flex flex-wrap gap-3 p-1">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-3 block">Estado de Ánimo</label>
+                <div className="flex flex-wrap gap-2.5 p-1">
                   {MOODS.map(m => (
                     <button
                       key={m.id}
                       type="button"
                       onClick={() => setNewSong({ ...newSong, mood: m.id })}
-                      className={`px-5 py-3 rounded-xl text-xs font-bold transition-all duration-300 flex items-center gap-2 border-2 ${
+                      className={`px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-300 flex items-center gap-2 border ${
                         newSong.mood === m.id
-                          ? 'bg-primary text-primary-foreground border-primary shadow-md'
-                          : 'bg-card text-muted-foreground border-border hover:border-primary/50'
+                          ? 'bg-primary text-primary-foreground border-primary glow-primary scale-105'
+                          : 'glass-card text-muted-foreground border-border hover:border-primary/50'
                       }`}
                     >
                       <span className="text-lg">{m.emoji}</span> {m.label}
@@ -464,7 +479,7 @@ function App() {
               </div>
 
               {error && (
-                <div className="bg-destructive/10 text-destructive p-4 rounded-xl flex items-center gap-3 border border-destructive/20">
+                <div className="bg-destructive/10 text-destructive p-4 rounded-2xl flex items-center gap-3 border border-destructive/20 animate-in fade-in">
                   <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -472,20 +487,20 @@ function App() {
                 </div>
               )}
 
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row gap-4 pt-2">
                 <button
                   type="submit"
-                  className="flex-[2] py-5 rounded-xl bg-primary text-primary-foreground font-black uppercase tracking-widest hover:bg-primary/90 transition-all duration-500 shadow-md active:scale-95 flex items-center justify-center gap-3"
+                  className="flex-[2] py-4 rounded-2xl bg-primary text-primary-foreground font-black uppercase tracking-widest hover:bg-primary/90 transition-all duration-300 shadow-md glow-primary active:scale-95 flex items-center justify-center gap-3 text-xs"
                 >
                   Confirmar y Agregar
-                  <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg style={{ width: '18px', height: '18px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                   </svg>
                 </button>
                 <button
                   type="button"
                   onClick={() => { setShowAddForm(false); setError(''); setNewSong({ title: '', artist: '', youtubeUrl: '', lyrics: '', mood: 'happy' }); }}
-                  className="flex-1 py-5 rounded-xl border-2 border-border text-muted-foreground font-black uppercase tracking-widest hover:bg-muted/30 transition-all duration-300 active:scale-95"
+                  className="flex-1 py-4 rounded-2xl border border-border glass-card text-muted-foreground font-black uppercase tracking-widest hover:bg-muted/40 transition-all duration-300 active:scale-95 text-xs"
                 >
                   Cancelar
                 </button>
@@ -494,60 +509,62 @@ function App() {
           </section>
         )}
 
-        {/* Playlist Dropdown */}
+        {/* Playlist Dropdown / Drawer */}
         <div className="relative mb-12">
           <button
             onClick={() => {
               setShowDropdown(!showDropdown);
               if (!showDropdown) setShowAddForm(false);
             }}
-            className={`w-full p-6 md:p-10 rounded-2xl transition-all duration-500 flex items-center justify-between border-2 group relative z-10 ${
+            className={`w-full p-6 md:p-8 rounded-3xl transition-all duration-500 flex items-center justify-between border group relative z-10 ${
               showDropdown 
-                ? 'bg-card border-primary shadow-md' 
-                : 'bg-card/60 border-border hover:bg-card hover:border-primary/50 shadow-sm'
+                ? 'glass-panel border-primary shadow-xl glow-primary' 
+                : 'glass-panel border-white/60 hover:border-primary/50 shadow-md hover:shadow-xl'
             }`}
           >
-            <div className="flex items-center gap-6">
-              <div className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-500 ${showDropdown ? 'bg-primary text-primary-foreground shadow-md' : 'bg-muted/30 text-muted-foreground group-hover:bg-primary/10'}`}>
-                <svg style={{ width: '28px', height: '28px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-5">
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 ${showDropdown ? 'bg-primary text-primary-foreground glow-primary' : 'bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground'}`}>
+                <svg style={{ width: '26px', height: '26px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
                 </svg>
               </div>
               <div className="text-left">
-                <p className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.2em] leading-none mb-2">Colección de Música</p>
+                <p className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.25em] leading-none mb-1.5">Colección de Música</p>
                 <div className="flex items-center gap-3">
-                  <p className="text-2xl font-black text-foreground leading-none">{playlist.length}</p>
-                  <span className="text-muted-foreground/50 font-medium tracking-wide">canciones disponibles</span>
+                  <p className="text-3xl font-black text-foreground leading-none">{playlist.length}</p>
+                  <span className="text-muted-foreground/70 text-xs font-bold tracking-wide">canciones cargadas</span>
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <span className={`px-3 py-1 rounded-md text-[10px] font-bold tracking-widest uppercase transition-opacity duration-500 ${showDropdown ? 'opacity-0' : 'bg-muted/30 text-muted-foreground'}`}>Ver Todo</span>
-              <svg style={{ width: '24px', height: '24px' }} className={`text-muted-foreground transition-transform duration-700 ${showDropdown ? 'rotate-180 text-primary' : 'group-hover:translate-y-1'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <span className={`px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-500 ${showDropdown ? 'opacity-0' : 'bg-primary/10 text-primary border border-primary/20'}`}>
+                Explorar
+              </span>
+              <svg style={{ width: '24px', height: '24px' }} className={`text-muted-foreground transition-transform duration-500 ${showDropdown ? 'rotate-180 text-primary' : 'group-hover:translate-y-1'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
               </svg>
             </div>
           </button>
 
           {showDropdown && (
-            <div className="absolute top-full left-0 right-0 mt-4 z-50 bg-card rounded-2xl shadow-md border border-border overflow-hidden flex flex-col">
+            <div className="absolute top-full left-0 right-0 mt-4 z-50 glass-panel rounded-3xl shadow-2xl border border-white/80 overflow-hidden flex flex-col animate-in fade-in slide-in-from-top-2 duration-300">
 
               {/* Active Mood Filter Banner — sticky top */}
               {moodMatchedIds.size > 0 && (
-                <div className="sticky top-0 z-10 flex items-center justify-between px-8 py-4 bg-primary text-primary-foreground">
+                <div className="sticky top-0 z-10 flex items-center justify-between px-6 md:px-8 py-3.5 bg-primary text-primary-foreground shadow-md">
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-1 text-xl">
                       {activeMoodEmojis.map((emoji, i) => (
                         <span key={i}>{emoji}</span>
                       ))}
                     </div>
-                    <span className="text-[11px] font-black uppercase tracking-widest opacity-90">
-                      {moodMatchedIds.size} canciones · Mood Mix
+                    <span className="text-[11px] font-black uppercase tracking-widest opacity-95">
+                      {moodMatchedIds.size} canciones · Mood Mix Activo
                     </span>
                   </div>
                   <button
                     onClick={() => { setMoodMatchedIds(new Set()); setActiveMoodEmojis([]); }}
-                    className="text-[10px] font-black uppercase tracking-widest bg-primary-foreground/20 hover:bg-primary-foreground/30 px-4 py-1.5 rounded-md transition-all"
+                    className="text-[10px] font-black uppercase tracking-widest bg-primary-foreground/20 hover:bg-primary-foreground/30 px-3.5 py-1.5 rounded-xl transition-all"
                   >
                     ✕ Limpiar
                   </button>
@@ -555,28 +572,28 @@ function App() {
               )}
 
               {/* Search and Filters */}
-              <div className="p-6 md:p-8 border-b border-border bg-card">
-                <div className="flex gap-2 mb-5 overflow-x-auto pb-1 no-scrollbar">
+              <div className="p-6 md:p-8 border-b border-border/60 bg-white/40">
+                <div className="flex gap-2 mb-4 overflow-x-auto pb-1 no-scrollbar">
                   <button 
                     onClick={() => setSearchType('both')}
-                    className={`px-4 py-2 rounded-md text-[10px] font-bold tracking-widest transition-all shrink-0 ${searchType === 'both' ? 'bg-primary text-primary-foreground' : 'bg-muted/30 text-muted-foreground hover:bg-muted/50'}`}
+                    className={`px-4 py-2 rounded-xl text-[10px] font-black tracking-widest uppercase transition-all shrink-0 ${searchType === 'both' ? 'bg-primary text-primary-foreground shadow-sm glow-primary' : 'bg-muted/40 text-muted-foreground hover:bg-muted/70'}`}
                   >TODO</button>
                   <button 
                     onClick={() => setSearchType('title')}
-                    className={`px-4 py-2 rounded-md text-[10px] font-bold tracking-widest transition-all shrink-0 ${searchType === 'title' ? 'bg-primary text-primary-foreground' : 'bg-muted/30 text-muted-foreground hover:bg-muted/50'}`}
+                    className={`px-4 py-2 rounded-xl text-[10px] font-black tracking-widest uppercase transition-all shrink-0 ${searchType === 'title' ? 'bg-primary text-primary-foreground shadow-sm glow-primary' : 'bg-muted/40 text-muted-foreground hover:bg-muted/70'}`}
                   >TÍTULO</button>
                   <button 
                     onClick={() => setSearchType('artist')}
-                    className={`px-4 py-2 rounded-md text-[10px] font-bold tracking-widest transition-all shrink-0 ${searchType === 'artist' ? 'bg-primary text-primary-foreground' : 'bg-muted/30 text-muted-foreground hover:bg-muted/50'}`}
-                  >AUTOR</button>
+                    className={`px-4 py-2 rounded-xl text-[10px] font-black tracking-widest uppercase transition-all shrink-0 ${searchType === 'artist' ? 'bg-primary text-primary-foreground shadow-sm glow-primary' : 'bg-muted/40 text-muted-foreground hover:bg-muted/70'}`}
+                  >ARTISTA</button>
                 </div>
                 <div className="relative group">
                   <input
                     type="text"
-                    placeholder={`Buscar ${searchType === 'title' ? 'por título' : searchType === 'artist' ? 'por autor' : 'canción o autor'}...`}
+                    placeholder={`Buscar ${searchType === 'title' ? 'por título' : searchType === 'artist' ? 'por artista' : 'canción o artista'}...`}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-12 pr-12 py-4 rounded-xl border-2 border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary focus:bg-card transition-all text-base"
+                    className="input-field pl-12 pr-12 text-base"
                   />
                   <svg style={{ width: '20px', height: '20px' }} className="absolute left-4 top-4 text-muted-foreground group-focus-within:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -584,9 +601,9 @@ function App() {
                   {searchTerm && (
                     <button
                       onClick={() => setSearchTerm('')}
-                      className="absolute right-4 top-4 p-1 rounded-md hover:bg-muted/30 text-muted-foreground transition-colors"
+                      className="absolute right-4 top-3.5 p-1.5 rounded-xl hover:bg-muted/50 text-muted-foreground transition-colors"
                     >
-                      <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg style={{ width: '18px', height: '18px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
@@ -595,51 +612,53 @@ function App() {
               </div>
 
               {/* Song List */}
-              <div className="bg-card">
+              <div className="max-h-[460px] overflow-y-auto divide-y divide-border/40">
                 {filteredPlaylist.length > 0 ? (
-                  <div className="divide-y divide-border/50">
+                  <div>
                     {paginatedSongs.map((song) => {
                       const actualIndex = playlist.findIndex(s => s.id === song.id);
                       const isActive = actualIndex === currentIndex;
                       const isMoodMatch = moodMatchedIds.has(song.id);
                       
                       return (
-                        <button
+                        <div
+                          key={song.id || actualIndex}
                           onClick={() => handleSongClick(actualIndex)}
-className={`w-full text-left px-6 md:px-10 py-5 transition-all duration-500 flex items-center gap-4 md:gap-8 group cursor-pointer relative ${
-                              isActive ? 'bg-primary/10' : isMoodMatch ? 'bg-gradient-to-r from-primary/5 via-card to-card hover:from-primary/10 hover:via-primary/5' : 'hover:bg-muted/20'
-                            }`}
+                          className={`w-full text-left px-6 md:px-8 py-4 transition-all duration-300 flex items-center gap-4 md:gap-6 group cursor-pointer relative ${
+                            isActive ? 'bg-primary/10' : isMoodMatch ? 'bg-gradient-to-r from-primary/10 via-white/50 to-white/30 hover:from-primary/15' : 'hover:bg-muted/40'
+                          }`}
                         >
                           {/* Mood match accent bar */}
                           {isMoodMatch && (
-                            <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-primary" />
+                            <div className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-full bg-primary shadow-sm" />
                           )}
-                          <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 text-sm font-black shadow-sm transition-all duration-500 ${
-                            isActive ? 'bg-primary text-primary-foreground scale-110 -rotate-3 shadow-md' : 'bg-muted/30 text-muted-foreground group-hover:scale-105 group-hover:rotate-2'
+                          
+                          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 text-xs font-black transition-all duration-300 ${
+                            isActive ? 'bg-primary text-primary-foreground scale-105 shadow-md glow-primary' : 'bg-muted/40 text-muted-foreground group-hover:bg-primary/20 group-hover:text-primary'
                           }`}>
                             {isActive ? (
-                              <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                              <svg className="w-5 h-5 fill-current animate-pulse" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             ) : (
                               actualIndex + 1
                             )}
                           </div>
                           
-                          <div className="flex-1 min-w-0 space-y-1">
-                            <h4 className={`text-base font-bold truncate transition-colors duration-300 ${
+                          <div className="flex-1 min-w-0 space-y-0.5">
+                            <h4 className={`text-base font-bold truncate transition-colors duration-200 ${
                               isActive ? 'text-primary' : 'text-foreground group-hover:text-primary'
                             }`}>
                               {song.title}
                             </h4>
-                            <p className={`text-[12px] font-medium truncate transition-colors duration-300 ${
-                              isActive ? 'text-muted-foreground' : 'text-muted-foreground/50'
+                            <p className={`text-xs font-medium truncate ${
+                              isActive ? 'text-primary/70' : 'text-muted-foreground'
                             }`}>
                               {song.artist}
                             </p>
                           </div>
 
                           {songErrors.has(song.youtubeId) && (
-                            <div className="shrink-0 text-[10px] font-bold text-destructive bg-destructive/10 px-2 py-1 rounded-lg border border-destructive/20 flex items-center gap-1">
-                              <span className="w-2 h-2 bg-destructive rounded-full animate-pulse" />
+                            <div className="shrink-0 text-[10px] font-black text-destructive bg-destructive/10 px-2.5 py-1 rounded-full border border-destructive/20 flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 bg-destructive rounded-full animate-ping" />
                               RESTRINGIDA
                             </div>
                           )}
@@ -653,10 +672,10 @@ className={`w-full text-left px-6 md:px-10 py-5 transition-all duration-500 flex
                           )}
 
                           {!isActive && (
-                            <div className="shrink-0 flex items-center gap-4">
+                            <div className="shrink-0 flex items-center gap-3">
                               {isMoodMatch && activeMoodEmojis.length > 0 ? (
-                                <span className="text-[10px] px-4 py-2 bg-secondary text-secondary-foreground rounded-md font-black border border-secondary flex items-center gap-2 shadow-sm uppercase tracking-wider">
-                                  <span className="text-sm">{activeMoodEmojis.join('')}</span>
+                                <span className="text-[10px] px-3 py-1.5 bg-secondary/15 text-secondary rounded-xl font-black border border-secondary/30 flex items-center gap-1.5 uppercase tracking-wider">
+                                  <span className="text-xs">{activeMoodEmojis.join('')}</span>
                                   <span>MOOD</span>
                                 </span>
                               ) : (
@@ -664,8 +683,8 @@ className={`w-full text-left px-6 md:px-10 py-5 transition-all duration-500 flex
                                   const moodId = getSongMood(song);
                                   const moodInfo = MOODS.find(m => m.id === moodId) || MOODS[0];
                                   return (
-                                    <span className="text-[10px] px-4 py-2 bg-card text-muted-foreground rounded-md font-black border border-border flex items-center gap-2 shadow-sm uppercase tracking-wider transition-all group-hover:border-primary/50">
-                                      <span className="text-sm">{moodInfo.emoji}</span>
+                                    <span className="text-[10px] px-3 py-1.5 bg-muted/40 text-muted-foreground rounded-xl font-black border border-border/60 flex items-center gap-1.5 uppercase tracking-wider transition-all group-hover:border-primary/40 group-hover:text-foreground">
+                                      <span className="text-xs">{moodInfo.emoji}</span>
                                       <span>{moodInfo.label}</span>
                                     </span>
                                   );
@@ -676,94 +695,96 @@ className={`w-full text-left px-6 md:px-10 py-5 transition-all duration-500 flex
                                   e.stopPropagation();
                                   handleDelete(actualIndex, e);
                                 }}
-                                className="p-3 text-muted-foreground hover:text-destructive transition-all rounded-xl hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0"
+                                className="p-2.5 text-muted-foreground/60 hover:text-destructive hover:bg-destructive/10 transition-all rounded-xl opacity-0 group-hover:opacity-100"
+                                title="Eliminar canción"
                               >
-                                <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg style={{ width: '18px', height: '18px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
                               </button>
                             </div>
                           )}
-                        </button>
+                        </div>
                       );
                     })}
                   </div>
                 ) : (
-                  <div className="py-24 text-center">
-                    <div className="w-20 h-20 bg-muted/30 rounded-2xl flex items-center justify-center mx-auto mb-4 text-muted-foreground">
-                      <svg style={{ width: '32px', height: '32px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="py-20 text-center">
+                    <div className="w-16 h-16 bg-muted/40 rounded-2xl flex items-center justify-center mx-auto mb-4 text-muted-foreground">
+                      <svg style={{ width: '28px', height: '28px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
                     </div>
-                    <p className="text-muted-foreground font-medium italic">No se encontraron resultados</p>
-                    <button onClick={() => setSearchTerm('')} className="text-sm text-primary font-bold uppercase tracking-widest mt-4 hover:text-primary/80 transition-colors">Limpiar búsqueda</button>
-                  </div>
-                )}
-
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-between px-6 md:px-10 py-4 bg-card border-t border-border">
-                    <button
-                      onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
-                      disabled={safePage === 0}
-                      className={`px-4 py-2 rounded-md text-[11px] font-bold uppercase tracking-wider transition-all ${
-                        safePage === 0
-                          ? 'text-muted-foreground/30 cursor-not-allowed'
-                          : 'text-muted-foreground hover:bg-muted/30'
-                      }`}
-                    >
-                      ← Anterior
-                    </button>
-
-                    <div className="flex items-center gap-1.5">
-                      {Array.from({ length: totalPages }, (_, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setCurrentPage(i)}
-                          className={`w-8 h-8 rounded-md text-[12px] font-bold transition-all ${
-                            i === safePage
-                              ? 'bg-primary text-primary-foreground shadow-sm'
-                              : 'text-muted-foreground hover:bg-muted/30'
-                          }`}
-                        >
-                          {i + 1}
-                        </button>
-                      ))}
-                    </div>
-
-                    <button
-                      onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))}
-                      disabled={safePage === totalPages - 1}
-                      className={`px-4 py-2 rounded-md text-[11px] font-bold uppercase tracking-wider transition-all ${
-                        safePage === totalPages - 1
-                          ? 'text-muted-foreground/30 cursor-not-allowed'
-                          : 'text-muted-foreground hover:bg-muted/30'
-                      }`}
-                    >
-                      Siguiente →
-                    </button>
+                    <p className="text-muted-foreground font-bold">No se encontraron resultados</p>
+                    <button onClick={() => setSearchTerm('')} className="text-xs text-primary font-black uppercase tracking-widest mt-3 hover:underline">Limpiar búsqueda</button>
                   </div>
                 )}
               </div>
-            </div>
 
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between px-6 md:px-8 py-4 bg-white/40 border-t border-border/60">
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
+                    disabled={safePage === 0}
+                    className={`px-3.5 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
+                      safePage === 0
+                        ? 'text-muted-foreground/30 cursor-not-allowed'
+                        : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+                    }`}
+                  >
+                    ← Anterior
+                  </button>
+
+                  <div className="flex items-center gap-1.5">
+                    {Array.from({ length: totalPages }, (_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setCurrentPage(i)}
+                        className={`w-8 h-8 rounded-xl text-xs font-black transition-all ${
+                          i === safePage
+                            ? 'bg-primary text-primary-foreground shadow-sm glow-primary'
+                            : 'text-muted-foreground hover:bg-muted/40'
+                        }`}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))}
+                    disabled={safePage === totalPages - 1}
+                    className={`px-3.5 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
+                      safePage === totalPages - 1
+                        ? 'text-muted-foreground/30 cursor-not-allowed'
+                        : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+                    }`}
+                  >
+                    Siguiente →
+                  </button>
+                </div>
+              )}
+            </div>
           )}
         </div>
 
-        <section className="bg-card border border-border rounded-2xl shadow-sm p-4 md:p-6 mb-8">
-          <div className="aspect-video rounded-xl overflow-hidden bg-muted/30">
+        {/* Player Section */}
+        <section className="glass-panel rounded-3xl p-6 md:p-10 mb-10 border border-white/80 shadow-2xl relative overflow-hidden">
+          <div className="aspect-video rounded-2xl overflow-hidden bg-black/80 shadow-xl border border-white/20 relative group">
             <div id="youtube-player" className="w-full h-full" />
           </div>
 
-          <div className="text-center mt-6">
-            <h2 className="text-2xl md:text-3xl font-black text-foreground leading-tight uppercase">
+          <div className="text-center mt-8">
+            <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight leading-tight">
               {currentSong.title}
             </h2>
-            <p className="mt-1 text-muted-foreground text-base md:text-lg font-medium">
-              {currentSong.artist}
+            <p className="mt-2 text-muted-foreground text-lg md:text-xl font-semibold flex items-center justify-center gap-2">
+              <span>{currentSong.artist}</span>
             </p>
           </div>
 
-          <div className="flex justify-center items-center gap-6 mt-8">
+          {/* Controls Bar */}
+          <div className="flex justify-center items-center gap-5 md:gap-7 mt-8">
             <button
               onClick={() => {
                 setShowMoodPicker(true);
@@ -771,31 +792,31 @@ className={`w-full text-left px-6 md:px-10 py-5 transition-all duration-500 flex
                 setShowDropdown(false);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="w-12 h-12 rounded-xl bg-card text-muted-foreground flex items-center justify-center shadow-sm hover:shadow-md hover:scale-110 transition-all duration-300 border border-border group"
+              className="w-13 h-13 rounded-2xl glass-card text-muted-foreground flex items-center justify-center shadow-md hover:shadow-xl hover:scale-110 hover:text-primary hover:border-primary/50 transition-all duration-300 group"
               title="Smart Shuffle por mood"
               aria-label="Smart Shuffle"
             >
-              <svg style={{ width: '24px', height: '24px' }} className="group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg style={{ width: '22px', height: '22px' }} className="group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
               </svg>
             </button>
 
             <button
               onClick={goToPrevious}
-              className="w-12 h-12 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300"
+              className="w-14 h-14 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg glow-primary hover:shadow-xl hover:scale-110 active:scale-95 transition-all duration-300"
               aria-label="Previous song"
             >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z" />
               </svg>
             </button>
 
             <button
               onClick={goToNext}
-              className="w-12 h-12 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300"
+              className="w-14 h-14 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg glow-primary hover:shadow-xl hover:scale-110 active:scale-95 transition-all duration-300"
               aria-label="Next song"
             >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
               </svg>
             </button>
@@ -806,20 +827,20 @@ className={`w-full text-left px-6 md:px-10 py-5 transition-all duration-500 flex
                 setShowAddForm(true);
                 setShowDropdown(false);
               }}
-              className="w-12 h-12 rounded-xl bg-card text-muted-foreground flex items-center justify-center shadow-sm hover:shadow-md hover:scale-110 transition-all duration-300 border border-border group"
-              title="Add New Song"
+              className="w-13 h-13 rounded-2xl glass-card text-muted-foreground flex items-center justify-center shadow-md hover:shadow-xl hover:scale-110 hover:text-primary hover:border-primary/50 transition-all duration-300 group"
+              title="Agregar Nueva Canción"
               aria-label="Add Song"
             >
-              <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg style={{ width: '22px', height: '22px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
             </button>
           </div>
 
           {currentSong.lyrics && (
-            <div className="mt-6 text-center">
-              <div className="bg-muted/20 rounded-xl p-4 max-h-48 overflow-y-auto">
-                <p className="text-foreground leading-relaxed whitespace-pre-line text-lg font-medium">
+            <div className="mt-8 text-center animate-in fade-in duration-500">
+              <div className="glass-card rounded-2xl p-6 max-h-56 overflow-y-auto border border-white/60 shadow-inner">
+                <p className="text-foreground/90 leading-relaxed whitespace-pre-line text-lg font-medium font-sans">
                   {currentSong.lyrics}
                 </p>
               </div>
@@ -827,9 +848,9 @@ className={`w-full text-left px-6 md:px-10 py-5 transition-all duration-500 flex
           )}
         </section>
 
-
-        <footer className="mt-8 text-center text-muted-foreground/50 text-sm">
-          <div className="flex justify-center gap-4 mb-2">
+        {/* Footer */}
+        <footer className="mt-12 text-center text-muted-foreground text-xs space-y-3">
+          <div className="flex justify-center gap-4">
             <button
               onClick={() => {
                 const blob = new Blob([JSON.stringify(playlist, null, 2)], { type: 'application/json' });
@@ -839,25 +860,30 @@ className={`w-full text-left px-6 md:px-10 py-5 transition-all duration-500 flex
                 a.download = 'birthday-playlist.json';
                 a.click();
               }}
-              className="underline hover:no-underline text-xs opacity-50 hover:opacity-100"
+              className="px-4 py-2 rounded-xl glass-card text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all font-bold uppercase tracking-wider"
             >
-              Export
+              Exportar JSON
             </button>
             <button
               onClick={() => {
-                if (confirm('Reset to default playlist? Your songs will be lost.')) {
+                if (confirm('¿Restablecer la playlist original? Tus canciones agregadas se perderán.')) {
                   setPlaylist(initialPlaylist);
                   setCurrentIndex(0);
                 }
               }}
-              className="underline hover:no-underline text-xs opacity-50 hover:opacity-100"
+              className="px-4 py-2 rounded-xl glass-card text-muted-foreground hover:text-destructive hover:border-destructive/40 transition-all font-bold uppercase tracking-wider"
             >
-              Reset
+              Restablecer
             </button>
           </div>
-          <p>con ❤️ para Mam</p>
+          <p className="font-bold opacity-80 pt-2 flex items-center justify-center gap-1">
+            con <span className="text-primary text-sm inline-block animate-pulse">❤️</span> para Mam
+          </p>
         </footer>
       </div>
+    </div>
+  );
+}      </div>
     </div>
   );
 }

@@ -1,63 +1,170 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: oklch(0.9735 0.0261 90.0953);
-  --color-foreground: oklch(0.3092 0.0518 219.6516);
-  --color-card: oklch(0.9306 0.0260 92.4020);
-  --color-card-foreground: oklch(0.3092 0.0518 219.6516);
-  --color-popover: oklch(0.9306 0.0260 92.4020);
-  --color-popover-foreground: oklch(0.3092 0.0518 219.6516);
-  --color-primary: oklch(0.5924 0.2025 355.8943);
+  --color-background: oklch(0.975 0.015 85);
+  --color-foreground: oklch(0.24 0.04 260);
+  --color-card: oklch(0.99 0.005 90);
+  --color-card-foreground: oklch(0.24 0.04 260);
+  --color-popover: oklch(0.99 0.005 90);
+  --color-popover-foreground: oklch(0.24 0.04 260);
+  --color-primary: oklch(0.62 0.22 350);
+  --color-primary-hover: oklch(0.56 0.24 350);
   --color-primary-foreground: oklch(1 0 0);
-  --color-secondary: oklch(0.6437 0.1019 187.3840);
+  --color-secondary: oklch(0.65 0.14 190);
   --color-secondary-foreground: oklch(1 0 0);
-  --color-muted: oklch(0.6979 0.0159 196.7940);
-  --color-muted-foreground: oklch(0.3092 0.0518 219.6516);
-  --color-accent: oklch(0.5808 0.1732 39.5003);
+  --color-muted: oklch(0.93 0.01 90);
+  --color-muted-foreground: oklch(0.48 0.03 250);
+  --color-accent: oklch(0.65 0.18 45);
   --color-accent-foreground: oklch(1 0 0);
-  --color-destructive: oklch(0.5863 0.2064 27.1172);
+  --color-destructive: oklch(0.60 0.22 25);
   --color-destructive-foreground: oklch(1 0 0);
-  --color-border: oklch(0.6537 0.0197 205.2618);
-  --color-input: oklch(0.6537 0.0197 205.2618);
-  --color-ring: oklch(0.5924 0.2025 355.8943);
-  --color-sidebar: oklch(0.9735 0.0261 90.0953);
-  --color-sidebar-foreground: oklch(0.3092 0.0518 219.6516);
-  --color-sidebar-primary: oklch(0.5924 0.2025 355.8943);
+  --color-border: oklch(0.88 0.015 90);
+  --color-input: oklch(0.90 0.015 90);
+  --color-ring: oklch(0.62 0.22 350);
+  --color-sidebar: oklch(0.975 0.015 85);
+  --color-sidebar-foreground: oklch(0.24 0.04 260);
+  --color-sidebar-primary: oklch(0.62 0.22 350);
   --color-sidebar-primary-foreground: oklch(1 0 0);
-  --color-sidebar-accent: oklch(0.6437 0.1019 187.3840);
+  --color-sidebar-accent: oklch(0.65 0.14 190);
   --color-sidebar-accent-foreground: oklch(1 0 0);
-  --color-sidebar-border: oklch(0.6537 0.0197 205.2618);
-  --color-sidebar-ring: oklch(0.5924 0.2025 355.8943);
-  --font-sans: "Outfit", sans-serif;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --color-sidebar-border: oklch(0.88 0.015 90);
+  --color-sidebar-ring: oklch(0.62 0.22 350);
+  --font-sans: "Outfit", system-ui, -apple-system, sans-serif;
   --font-mono: "Space Mono", monospace;
-  --radius: 0.25rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
 }
 
 body {
-  font-family: "Outfit", sans-serif;
+  font-family: "Outfit", system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Surface Utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05),
+              0 0 15px rgba(255, 255, 255, 0.5) inset;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(230, 230, 235, 0.7);
+}
+
+/* Glow & Ambient Light Effects */
+.glow-primary {
+  box-shadow: 0 8px 30px -5px rgba(225, 29, 110, 0.35);
+}
+
+.glow-primary-lg {
+  box-shadow: 0 12px 40px -5px rgba(225, 29, 110, 0.45);
+}
+
+.ambient-bg-glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.80 0.02 90);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.65 0.05 350);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Music Bar Animations for Equalizer */
+@keyframes music-bar-1 {
+  0%, 100% { height: 6px; }
+  50% { height: 18px; }
+}
+
+@keyframes music-bar-2 {
+  0%, 100% { height: 18px; }
+  50% { height: 8px; }
+}
+
+@keyframes music-bar-3 {
+  0%, 100% { height: 10px; }
+  50% { height: 22px; }
+}
+
+.animate-music-bar-1 {
+  animation: music-bar-1 0.8s ease-in-out infinite;
+}
+
+.animate-music-bar-2 {
+  animation: music-bar-2 1.1s ease-in-out infinite;
+}
+
+.animate-music-bar-3 {
+  animation: music-bar-3 0.9s ease-in-out infinite;
+}
+
+/* Gentle pulse glow keyframes */
+@keyframes soft-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-soft-float {
+  animation: soft-float 4s ease-in-out infinite;
 }
 
 .input-field {
   width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
-  border: 1px solid var(--color-border);
-  background-color: color-mix(in oklch, var(--color-background) 80%, transparent);
+  padding: 0.875rem 1.25rem;
+  border-radius: 1rem;
+  border: 1.5px solid var(--color-border);
+  background-color: rgba(255, 255, 255, 0.9);
   color: var(--color-foreground);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .input-field::placeholder {
-  color: color-mix(in oklch, var(--color-foreground) 50%, transparent);
+  color: var(--color-muted-foreground);
+  opacity: 0.7;
 }
 
 .input-field:focus {
   outline: none;
-  ring: 2px solid var(--color-ring);
-  border-color: transparent;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(225, 29, 110, 0.15);
 }
 
 button {
   cursor: pointer;
+  user-select: none;
 }
