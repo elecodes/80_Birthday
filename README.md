@@ -2,6 +2,8 @@
 
 A celebratory, high-fidelity web music player created for Mom's 80th birthday. Built with React 19, Tailwind CSS v4, and Vite 8, featuring an ambient glassmorphic design system, YouTube IFrame API playback, and a mood-based smart shuffle algorithm.
 
+**🌐 Live Demo:** [https://80-birthday.elecodesdata.workers.dev/](https://80-birthday.elecodesdata.workers.dev/)
+
 ---
 
 ## ✨ Features
@@ -86,4 +88,4 @@ npm run preview
 - **Build Tool:** [Vite 8](https://vite.dev/)
 - **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
 - **Typography:** Outfit & Space Mono (Google Fonts)
-- **Deployment:** GitHub Pages
+- **Deployment:** [Cloudflare](https://80-birthday.elecodesdata.workers.dev/)
