@@ -190,23 +190,21 @@ function App() {
   };
 
   const handleAddSong = (newSong) => {
-    setPlaylist((prev) => {
-      const updated = [...prev, newSong];
-      syncPlaylistToStorageAndUrl(updated, initialPlaylist);
-      setCurrentIndex(updated.length - 1);
-      return updated;
-    });
+    const updated = [...playlist, newSong];
+    setPlaylist(updated);
+    setCurrentIndex(updated.length - 1);
     setShowAddForm(false);
+    syncPlaylistToStorageAndUrl(updated, initialPlaylist);
   };
 
   const handleDeleteSong = (index) => {
     if (playlist.length <= 1) return;
     const newPlaylist = playlist.filter((_, i) => i !== index);
-    syncPlaylistToStorageAndUrl(newPlaylist, initialPlaylist);
     setPlaylist(newPlaylist);
     if (currentIndex >= newPlaylist.length) {
       setCurrentIndex(newPlaylist.length - 1);
     }
+    syncPlaylistToStorageAndUrl(newPlaylist, initialPlaylist);
   };
 
   const handleExportJson = () => {

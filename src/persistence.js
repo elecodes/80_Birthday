@@ -1,4 +1,4 @@
-import { MOOD_TAGS } from './moods.js';
+import { MOOD_TAGS, getSongMood } from './moods.js';
 
 const STORAGE_KEYS = {
   CUSTOM_SONGS: 'birthday_custom_songs_v1',
@@ -15,7 +15,7 @@ export function encodeCustomSongsToParam(customSongs) {
     t: s.title,
     a: s.artist,
     y: s.youtubeId,
-    m: s.tags?.find((tag) => tag !== 'user-added' && MOOD_TAGS[tag]) || s.mood || 'happy',
+    m: getSongMood(s),
     l: s.lyrics || '',
   }));
 
@@ -77,7 +77,7 @@ export function decodeCustomSongsFromParam(paramStr) {
 /**
  * Loads the initial playlist state combining:
  * 1. Base curated initialPlaylist
- * 2. Custom songs from URL parameter (?custom=)
+ * 2. Custom songs from URL parameter (?custom= or #custom=)
  * 3. Custom songs from localStorage
  * 4. Deleted song IDs from localStorage
  */
@@ -85,7 +85,13 @@ export function loadPersistedPlaylist(initialPlaylist) {
   let urlCustomSongs = [];
   try {
     const params = new URLSearchParams(window.location.search);
-    const customParam = params.get('custom');
+    let customParam = params.get('custom');
+    if (!customParam && window.location.hash) {
+      const hashClean = window.location.hash.replace(/^#\/?/, '');
+      const hashParams = new URLSearchParams(hashClean);
+      customParam = hashParams.get('custom');
+    }
+
     if (customParam) {
       urlCustomSongs = decodeCustomSongsFromParam(customParam);
     }
@@ -100,7 +106,18 @@ export function loadPersistedPlaylist(initialPlaylist) {
     if (savedCustom) {
       const parsed = JSON.parse(savedCustom);
       if (Array.isArray(parsed)) localCustomSongs = parsed;
+    } else {
+      // Legacy storage migration fallback
+      const legacySaved = localStorage.getItem('birthday-playlist');
+      if (legacySaved) {
+        const parsedLegacy = JSON.parse(legacySaved);
+        if (Array.isArray(parsedLegacy)) {
+          const initialIdSet = new Set(initialPlaylist.map((s) => s.id));
+          localCustomSongs = parsedLegacy.filter((s) => !initialIdSet.has(s.id));
+        }
+      }
     }
+
     const savedDeleted = localStorage.getItem(STORAGE_KEYS.DELETED_IDS);
     if (savedDeleted) {
       const parsed = JSON.parse(savedDeleted);
