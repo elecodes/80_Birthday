@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { initialPlaylist } from './playlist';
 import { MOODS, MOOD_TAGS } from './moods';
+import {
+  loadPersistedPlaylist,
+  syncPlaylistToStorageAndUrl,
+  resetPersistence,
+} from './persistence';
 
 // Modular UI Components
 import { Header } from './components/layout/Header';
@@ -11,7 +16,7 @@ import { PlaylistDrawer } from './components/playlist/PlaylistDrawer';
 import { AddSongModal } from './components/forms/AddSongModal';
 
 function App() {
-  const [playlist, setPlaylist] = useState(initialPlaylist);
+  const [playlist, setPlaylist] = useState(() => loadPersistedPlaylist(initialPlaylist));
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // UI Drawer / Modal toggles
@@ -187,6 +192,7 @@ function App() {
   const handleAddSong = (newSong) => {
     setPlaylist((prev) => {
       const updated = [...prev, newSong];
+      syncPlaylistToStorageAndUrl(updated, initialPlaylist);
       setCurrentIndex(updated.length - 1);
       return updated;
     });
@@ -196,6 +202,7 @@ function App() {
   const handleDeleteSong = (index) => {
     if (playlist.length <= 1) return;
     const newPlaylist = playlist.filter((_, i) => i !== index);
+    syncPlaylistToStorageAndUrl(newPlaylist, initialPlaylist);
     setPlaylist(newPlaylist);
     if (currentIndex >= newPlaylist.length) {
       setCurrentIndex(newPlaylist.length - 1);
@@ -213,6 +220,7 @@ function App() {
 
   const handleResetPlaylist = () => {
     if (confirm('¿Restablecer la playlist original? Tus canciones agregadas se perderán.')) {
+      resetPersistence();
       setPlaylist(initialPlaylist);
       setCurrentIndex(0);
       setMoodMatchedIds(new Set());
