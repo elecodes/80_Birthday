@@ -16,6 +16,7 @@ A celebratory, high-fidelity web music player created for Mom's 80th birthday. B
 - **📜 Lyrics Reader:** Collapsible typography card with one-click clipboard copy.
 - **📂 Paginated Collection Drawer:** Instant search by title/artist with a 10-track-per-page windowed paginator.
 - **➕ Custom Song Submission:** Modal form to add YouTube songs with real-time URL validation and mood tagging.
+- **🔗 Hybrid Persistence & Shareable URLs:** Newly added custom tracks automatically serialize to compact URL-safe query parameters (`?custom=...`) and sync with `localStorage`, enabling persistent track retention across reloads and one-click shareable links ("Copiar Enlace").
 - **💾 JSON Export & Reset:** Export custom playlists to JSON or restore the original curated set.
 
 ---
@@ -27,7 +28,7 @@ src/
 ├── components/
 │   ├── layout/
 │   │   ├── Header.jsx             # Festive hero header with tribute branding
-│   │   └── Footer.jsx             # Action buttons (export/reset) & dedication
+│   │   └── Footer.jsx             # Action buttons (export/reset/share link) & dedication
 │   ├── player/
 │   │   ├── PlayerHero.jsx         # Spotlight card (YouTube frame, metadata, mood glow)
 │   │   ├── PlayerControls.jsx     # Tactile navigation & drawer toggles
@@ -46,7 +47,8 @@ src/
 │       ├── Badge.jsx              # Status, count, and mood pill primitives
 │       └── Button.jsx             # Tactile button primitives with click physics
 ├── App.jsx                        # Central state coordinator & YouTube API manager
-├── playlist.js                    # Initial 71-song catalogue & helper utilities
+├── playlist.js                    # Initial 66-song catalogue & helper utilities
+├── persistence.js                 # Hybrid localStorage & URL parameter state sync
 ├── moods.js                       # Mood definitions, tags, and helper functions
 └── index.css                      # Tailwind v4 theme tokens & glassmorphism utilities
 ```
