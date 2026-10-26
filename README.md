@@ -9,11 +9,12 @@ A celebratory, high-fidelity web music player created for Mom's 80th birthday. B
 ## ✨ Features
 
 - **🎬 YouTube Playback Engine:** Seamless video embedding with autoplay, automatic track progression on end, and error recovery for restricted videos.
-- **🎶 66 Curated Songs:** Pre-loaded collection embedded in source code with artist metadata, lyrics, and mood tags.
+- **🎤 Synchronized Karaoke Mode:** Real-time scrolling lyrics synchronized with YouTube playback timestamps, auto-centering on active lines, mood-colored glowing typography, interactive line-seeking (click any line to jump video), and manual sync offset calibration.
+- **🎶 80 Curated Songs:** Pre-loaded collection embedded in source code with artist metadata, lyrics, and mood tags (commemorating Mom's 80th birthday).
 - **✨ Smart Mood Shuffle:** Greedy tag-similarity algorithm to dynamically sequence songs according to selected mood filters (Happy 🎉, Dance 💃, Romantic 💕, Calm 😌, Energetic 🌟, Nostalgic 🥹).
 - **🎨 Glassmorphism & OKLCH Theme:** Modern translucent cards (`backdrop-filter: blur(16px)`), warm ambient glows synchronized with the active track's mood, and fluid micro-animations.
 - **📊 Live Audio Visualizer:** Dynamic equalizer bars reacting to music playback.
-- **📜 Lyrics Reader:** Collapsible typography card with one-click clipboard copy.
+- **📜 Synced Lyrics & Fallback Reader:** Dynamic LRC fetching from LRCLIB with fuzzy matching, offline bundle fallbacks, and static lyrics fallback.
 - **📂 Paginated Collection Drawer:** Instant search by title/artist with a 10-track-per-page windowed paginator.
 - **➕ Custom Song Submission:** Modal form to add YouTube songs with real-time URL validation and mood tagging.
 - **🔗 Hybrid Persistence & Shareable URLs:** Newly added custom tracks automatically serialize to compact URL-safe query parameters (`?custom=...`) and sync with `localStorage`, enabling persistent track retention across reloads and one-click shareable links ("Copiar Enlace").
@@ -31,7 +32,7 @@ src/
 │   │   └── Footer.jsx             # Action buttons (export/reset/share link) & dedication
 │   ├── player/
 │   │   ├── PlayerHero.jsx         # Spotlight card (YouTube frame, metadata, mood glow)
-│   │   ├── PlayerControls.jsx     # Tactile navigation & drawer toggles
+│   │   ├── PlayerControls.jsx     # Tactile navigation, drawer toggles & karaoke trigger
 │   │   └── EqualizerBars.jsx      # Animated SVG/CSS equalizer wave
 │   ├── playlist/
 │   │   ├── PlaylistDrawer.jsx     # Searchable, paginated song collection
@@ -40,14 +41,19 @@ src/
 │   ├── mood/
 │   │   └── MoodFilterSection.jsx  # Interactive mood filter pills & smart shuffle trigger
 │   ├── lyrics/
+│   │   ├── KaraokeStage.jsx       # Real-time auto-scrolling karaoke view with calibration
 │   │   └── LyricsCard.jsx         # Smooth scrollable lyrics reader with copy action
 │   ├── forms/
 │   │   └── AddSongModal.jsx       # Song creation modal with YouTube URL parser
 │   └── ui/
 │       ├── Badge.jsx              # Status, count, and mood pill primitives
 │       └── Button.jsx             # Tactile button primitives with click physics
+├── hooks/
+│   └── useKaraoke.js              # Real-time YouTube player clock polling & karaoke state
+├── services/
+│   └── lyricsService.js           # LRC parser, query normalizer & LRCLIB client
 ├── App.jsx                        # Central state coordinator & YouTube API manager
-├── playlist.js                    # Initial 66-song catalogue & helper utilities
+├── playlist.js                    # Curated 80-song catalogue & helper utilities
 ├── persistence.js                 # Hybrid localStorage & URL parameter state sync
 ├── moods.js                       # Mood definitions, tags, and helper functions
 └── index.css                      # Tailwind v4 theme tokens & glassmorphism utilities
