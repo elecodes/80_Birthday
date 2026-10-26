@@ -368,6 +368,7 @@ function App() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           isRestricted={songErrors.has(currentSong.youtubeId)}
+          player={player}
         />
 
         {/* Tribute Footer */}

@@ -3,7 +3,7 @@ export function PlayerControls({
   onNext,
   onOpenShuffle,
   onOpenAddSong,
-  hasLyrics,
+  hasLyrics = true,
   showLyrics,
   onToggleLyrics,
 }) {
@@ -48,22 +48,20 @@ export function PlayerControls({
         </svg>
       </button>
 
-      {/* Lyrics Toggle (if current song has lyrics) */}
+      {/* Karaoke / Lyrics Toggle */}
       {hasLyrics && (
         <button
           type="button"
           onClick={onToggleLyrics}
           className={`w-12 h-12 sm:w-13 sm:h-13 rounded-2xl transition-all duration-300 flex items-center justify-center shadow-md active:scale-95 ${
             showLyrics
-              ? 'bg-accent text-accent-foreground shadow-lg scale-105'
+              ? 'bg-accent text-accent-foreground shadow-lg scale-105 ring-2 ring-accent/50'
               : 'glass-card text-muted-foreground hover:text-accent hover:border-accent/50 hover:scale-110'
           }`}
-          title={showLyrics ? 'Ocultar Letra' : 'Ver Letra'}
-          aria-label="Toggle Lyrics"
+          title={showLyrics ? 'Ocultar Karaoke' : 'Activar Modo Karaoke'}
+          aria-label="Toggle Karaoke"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
+          <span className="text-xl">🎤</span>
         </button>
       )}
 

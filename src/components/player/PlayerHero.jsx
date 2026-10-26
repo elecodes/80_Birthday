@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import { PlayerControls } from './PlayerControls';
 import { EqualizerBars } from './EqualizerBars';
-import { LyricsCard } from '../lyrics/LyricsCard';
+import { KaraokeStage } from '../lyrics/KaraokeStage';
+import { useKaraoke } from '../../hooks/useKaraoke';
 import { MOODS, getSongMood } from '../../moods';
 
 export function PlayerHero({
@@ -13,8 +13,9 @@ export function PlayerHero({
   onOpenShuffle,
   onOpenAddSong,
   isRestricted = false,
+  player = null,
 }) {
-  const [showLyrics, setShowLyrics] = useState(false);
+  const karaoke = useKaraoke(currentSong, player);
   const songMood = getSongMood(currentSong);
   const moodData = MOODS.find((m) => m.id === songMood) || MOODS[0];
 
@@ -93,18 +94,25 @@ export function PlayerHero({
         onNext={onNext}
         onOpenShuffle={onOpenShuffle}
         onOpenAddSong={onOpenAddSong}
-        hasLyrics={Boolean(currentSong?.lyrics)}
-        showLyrics={showLyrics}
-        onToggleLyrics={() => setShowLyrics(!showLyrics)}
+        hasLyrics={true}
+        showLyrics={karaoke.showKaraoke}
+        onToggleLyrics={karaoke.toggleKaraoke}
       />
 
-      {/* Embedded Lyrics (if open) */}
-      {showLyrics && currentSong?.lyrics && (
-        <LyricsCard
-          lyrics={currentSong.lyrics}
-          songTitle={currentSong.title}
-          artist={currentSong.artist}
-          onClose={() => setShowLyrics(false)}
+      {/* Embedded Karaoke Stage (if open) */}
+      {karaoke.showKaraoke && (
+        <KaraokeStage
+          lines={karaoke.lines}
+          plainLyrics={karaoke.plainLyrics}
+          currentTime={karaoke.currentTime}
+          isLoading={karaoke.isLoading}
+          songTitle={currentSong?.title}
+          artist={currentSong?.artist}
+          moodColor={moodData?.color || 'var(--color-primary)'}
+          offset={karaoke.offset}
+          onOffsetChange={karaoke.setOffset}
+          onSeek={karaoke.handleSeek}
+          onClose={() => karaoke.setShowKaraoke(false)}
         />
       )}
     </section>
